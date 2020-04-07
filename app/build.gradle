@@ -1,10 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'koin'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+
+    packagingOptions {
+        exclude 'META-INF/kotlinx-coroutines-core.kotlin_module'
+    }
 
     defaultConfig {
         applicationId "com.example.shoppinglist"
@@ -31,7 +37,32 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.android.material:material:1.1.0'
+
+
+    // Koin
+    implementation "org.koin:koin-core:2.1.5"
+    implementation "org.koin:koin-core-ext:2.1.5"
+    testImplementation "org.koin:koin-test:2.1.5"
+
+    // Koin AndroidX Scope features
+    implementation "org.koin:koin-androidx-scope:2.1.5"
+    implementation "org.koin:koin-androidx-viewmodel:2.1.5"
+    implementation "org.koin:koin-androidx-fragment:2.1.5"
+    implementation "org.koin:koin-androidx-ext:2.1.5"
+
+    implementation "org.koin:koin-ktor:2.1.5"
+
+    // viewModelScope
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01'
+
+    //recyclerview
+    implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
+
+    //cardview
+    implementation "androidx.cardview:cardview:1.0.0"
 }
