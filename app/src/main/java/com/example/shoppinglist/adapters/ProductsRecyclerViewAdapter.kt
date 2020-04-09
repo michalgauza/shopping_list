@@ -10,47 +10,52 @@ import com.example.shoppinglist.utils.setViewVisibility
 import com.example.shoppinglist.utils.shoppingItemsListDiffUtilCallback
 
 class ProductsRecyclerViewAdapter(private val isEditable: Boolean) :
-    ListAdapter<ProductModel, ProductsRecyclerViewAdapter.ShoppingItemsViewHolder>(
+    ListAdapter<ProductModel, ProductsRecyclerViewAdapter.ProductsViewHolder>(
         shoppingItemsListDiffUtilCallback
     ) {
 
     var removeProductCallback: ((ProductModel) -> Unit)? = null
     var buyProductCallback: ((ProductModel, Boolean) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingItemsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolder {
         val binding =
             ItemCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingItemsViewHolder(binding, isEditable)
+        return ProductsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ShoppingItemsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProductsViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class ShoppingItemsViewHolder(
-        private val binding: ItemCardViewBinding,
-        private val isEditable: Boolean
+    inner class ProductsViewHolder(
+        private val binding: ItemCardViewBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ProductModel) {
+        fun bind(product: ProductModel) {
             with(binding) {
-                itemCardViewConstraintLayout.background
-                product = item
-                itemCardViewCheckBox.apply {
-                    setViewVisibility(isEditable)
-                    isChecked = item.isBought
-                    setOnCheckedChangeListener { _, isChecked ->
-                        buyProductCallback?.invoke(item, isChecked)
-                    }
-                }
-                itemCardViewDeleteButton.apply {
-                    setViewVisibility(isEditable)
-                    setOnClickListener {
-                        removeProductCallback?.invoke(item)
-                    }
+                this.product = product
+                setupCheckBox(product)
+                setupDeleteButton(product)
+            }
+        }
+
+        private fun ItemCardViewBinding.setupDeleteButton(product: ProductModel) {
+            productCardViewDeleteButton.apply {
+                setViewVisibility(isEditable)
+                setOnClickListener {
+                    removeProductCallback?.invoke(product)
                 }
             }
         }
 
+        private fun ItemCardViewBinding.setupCheckBox(product: ProductModel) {
+            productCardViewCheckBox.apply {
+                setViewVisibility(isEditable)
+                isChecked = product.isBought
+                setOnCheckedChangeListener { _, isChecked ->
+                    buyProductCallback?.invoke(product, isChecked)
+                }
+            }
+        }
     }
 }

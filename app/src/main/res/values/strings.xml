@@ -12,4 +12,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="add_list_dialog_title">New list</string>
+    <string name="add_list_dialog_positive_button">OK</string>
+    <string name="add_list_dialog_negative_button">Cancel</string>
+    <string name="add_list_error_message">Can\'t add list without name.</string>
+    <string name="add_product_error_message">Can\'t add product without name</string>
+    <string name="add_product_dialog_negative_button">Cancel</string>
+    <string name="add_product_dialog_positive_button">OK</string>
+    <string name="add_product_dialog_title">New product</string>
 </resources>

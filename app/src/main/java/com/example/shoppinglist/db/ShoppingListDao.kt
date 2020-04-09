@@ -8,7 +8,7 @@ import com.example.shoppinglist.models.ShoppingListModel
 interface ShoppingListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdateList(shoppingListModel: ShoppingListModel)
+    suspend fun insertOrUpdateShoppingList(shoppingListModel: ShoppingListModel)
 
     @Query(value = "select * from shopping_lists where id = :id")
     suspend fun getShoppingListById(id: String): ShoppingListModel
@@ -20,5 +20,5 @@ interface ShoppingListDao {
     suspend fun getArchivedShoppingLists(): List<ShoppingListModel>
 
     @Delete
-    suspend fun deleteList(shoppingListModel: ShoppingListModel)
+    suspend fun deleteShoppingList(shoppingListModel: ShoppingListModel)
 }

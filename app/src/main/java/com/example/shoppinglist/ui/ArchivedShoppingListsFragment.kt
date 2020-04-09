@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.adapters.ShoppingListsRecyclerViewAdapter
 import com.example.shoppinglist.databinding.ArchivedFragmentShoppingListsBinding
 import com.example.shoppinglist.models.ShoppingListModel
-import com.example.shoppinglist.vm.ArchivedShoppingListsFragmentViewModel
+import com.example.shoppinglist.vm.ArchivedListsFragmentViewModel
 import org.koin.android.ext.android.inject
 
 class ArchivedShoppingListsFragment : Fragment() {
 
-    private val viewModel by inject<ArchivedShoppingListsFragmentViewModel>()
+    private val viewModel by inject<ArchivedListsFragmentViewModel>()
 
     private val shoppingListsListLiveDataObserver =
         Observer<List<ShoppingListModel>> { shoppingListsList ->
@@ -25,7 +25,6 @@ class ArchivedShoppingListsFragment : Fragment() {
     private lateinit var binding: ArchivedFragmentShoppingListsBinding
 
     private lateinit var shoppingListsRecyclerViewAdapter: ShoppingListsRecyclerViewAdapter
-
 
     override fun onResume() {
         super.onResume()
@@ -51,7 +50,6 @@ class ArchivedShoppingListsFragment : Fragment() {
 
         setupRecyclerAdapter()
 
-        viewModel.fetchArchivedLists()
         viewModel.archivedShoppingListsListLiveData.observe(
             viewLifecycleOwner,
             shoppingListsListLiveDataObserver
@@ -59,22 +57,28 @@ class ArchivedShoppingListsFragment : Fragment() {
     }
 
     private fun setupRecyclerAdapter() {
-        shoppingListsRecyclerViewAdapter = ShoppingListsRecyclerViewAdapter()
-        binding.archivedFragmentShoppingListRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.archivedFragmentShoppingListRecyclerView.adapter = shoppingListsRecyclerViewAdapter
-        shoppingListsRecyclerViewAdapter.listDetailsCallback = { listModel ->
-            navigateToListDetails(listModel)
+        shoppingListsRecyclerViewAdapter = ShoppingListsRecyclerViewAdapter().apply {
+            shoppingListDetailsCallback = { listModel ->
+                navigateToListDetails(listModel)
+            }
+            removeShoppingListCallback = { listModel ->
+                viewModel.deleteList(listModel)
+            }
+            archiveShoppingListCallback =
+                { shoppingListModel, archived ->
+                    shoppingListModel.isArchived = archived
+                    viewModel.updateOrInsertList(shoppingListModel)
+                }
         }
-        shoppingListsRecyclerViewAdapter.removeListCallback = { listModel ->
-            viewModel.deleteList(listModel)
-        }
-        shoppingListsRecyclerViewAdapter.archiveListCallback = { shoppingListModel, archived ->
-            shoppingListModel.isArchived = archived
-            viewModel.updateOrInsertList(shoppingListModel)
+
+        with(binding.archivedFragmentShoppingListRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = shoppingListsRecyclerViewAdapter
         }
     }
 
-    private fun navigateToListDetails(item: ShoppingListModel) {
-        ShoppingListDetailsActivity.getIntent(requireContext(), item.name, item.id, true).run { startActivity(this) }
+    private fun navigateToListDetails(shoppingList: ShoppingListModel) {
+        ShoppingListDetailsActivity.getIntent(requireContext(), shoppingList.name, shoppingList.id, true)
+            .run { startActivity(this) }
     }
 }

@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.shoppinglist.db.ShoppingListDao
 import com.example.shoppinglist.db.ShoppingListDatabase
 import com.example.shoppinglist.db.ShoppingListRepository
-import com.example.shoppinglist.vm.ArchivedShoppingListsFragmentViewModel
+import com.example.shoppinglist.vm.ArchivedListsFragmentViewModel
 import com.example.shoppinglist.vm.ShoppingListDetailsActivityViewModel
-import com.example.shoppinglist.vm.CurrentShoppingListsFragmentViewModel
+import com.example.shoppinglist.vm.CurrentListsFragmentViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -15,8 +15,8 @@ import org.koin.dsl.module
 const val DATABASE_NAME = "shopping_list_database"
 
 val viewModelModule = module {
-    viewModel { CurrentShoppingListsFragmentViewModel(get()) }
-    viewModel { ArchivedShoppingListsFragmentViewModel(get()) }
+    viewModel { CurrentListsFragmentViewModel(get()) }
+    viewModel { ArchivedListsFragmentViewModel(get()) }
     viewModel { ShoppingListDetailsActivityViewModel(get()) }
 }
 

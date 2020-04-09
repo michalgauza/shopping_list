@@ -9,19 +9,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.shoppinglist.R
 import com.example.shoppinglist.adapters.ShoppingListsRecyclerViewAdapter
 import com.example.shoppinglist.databinding.CurrentFragmentShoppingListsBinding
 import com.example.shoppinglist.models.ShoppingListModel
 import com.example.shoppinglist.utils.closeKeyboard
 import com.example.shoppinglist.utils.showKeyboard
-import com.example.shoppinglist.vm.CurrentShoppingListsFragmentViewModel
+import com.example.shoppinglist.vm.CurrentListsFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 
 class CurrentShoppingListsFragment : Fragment() {
 
-    private val viewModel by inject<CurrentShoppingListsFragmentViewModel>()
+    private val viewModel by inject<CurrentListsFragmentViewModel>()
 
     private lateinit var binding: CurrentFragmentShoppingListsBinding
     private lateinit var shoppingListsRecyclerViewAdapter: ShoppingListsRecyclerViewAdapter
@@ -63,13 +64,13 @@ class CurrentShoppingListsFragment : Fragment() {
 
     private fun setupRecyclerAdapter() {
         shoppingListsRecyclerViewAdapter = ShoppingListsRecyclerViewAdapter().apply {
-            listDetailsCallback = { listModel ->
+            shoppingListDetailsCallback = { listModel ->
                 navigateToListDetails(listModel)
             }
-            removeListCallback = { listModel ->
+            removeShoppingListCallback = { listModel ->
                 viewModel.deleteList(listModel)
             }
-            archiveListCallback = { shoppingListModel, archived ->
+            archiveShoppingListCallback = { shoppingListModel, archived ->
                 shoppingListModel.isArchived = archived
                 viewModel.updateOrInsertList(shoppingListModel)
             }
@@ -86,13 +87,13 @@ class CurrentShoppingListsFragment : Fragment() {
         }
         showKeyboard(requireContext())
         AlertDialog.Builder(requireContext()).apply {
-            setTitle("New list")
+            setTitle(getString(R.string.add_list_dialog_title))
             setView(input)
             setCancelable(false)
-            setPositiveButton("OK") { _, _ ->
+            setPositiveButton(getString(R.string.add_list_dialog_positive_button)) { _, _ ->
                 addShoppingList(input)
             }
-            setNegativeButton("Cancel") { dialog, _ ->
+            setNegativeButton(getString(R.string.add_list_dialog_negative_button)) { dialog, _ ->
                 dialog.cancel()
                 closeKeyboard(requireContext())
             }
@@ -102,22 +103,22 @@ class CurrentShoppingListsFragment : Fragment() {
 
     private fun addShoppingList(input: EditText) {
         if (input.text.isEmpty().not()) {
-            val newItem = ShoppingListModel(
-                name = input.text.toString(),
-                shoppingItemsList = mutableListOf()
+            viewModel.updateOrInsertList(
+                ShoppingListModel(
+                    name = input.text.toString(),
+                    shoppingItemsList = mutableListOf()
+                )
             )
-            viewModel.updateOrInsertList(newItem)
             closeKeyboard(requireContext())
         } else {
             Snackbar.make(
                 binding.currentFragmentShoppingListConstraintLayout,
-                "Can't add list without name.",
+                getString(R.string.add_list_error_message),
                 Snackbar.LENGTH_SHORT
             ).show()
             closeKeyboard(requireContext())
         }
     }
-
 
     private fun navigateToListDetails(item: ShoppingListModel) {
         ShoppingListDetailsActivity.getIntent(requireContext(), item.name, item.id, false)

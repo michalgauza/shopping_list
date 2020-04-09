@@ -13,9 +13,9 @@ class ShoppingListsRecyclerViewAdapter :
         shoppingListDiffUtilCallback
     ) {
 
-    var removeListCallback: ((ShoppingListModel) -> Unit)? = null
-    var archiveListCallback: ((ShoppingListModel, Boolean) -> Unit)? = null
-    var listDetailsCallback: ((ShoppingListModel) -> Unit)? = null
+    var removeShoppingListCallback: ((ShoppingListModel) -> Unit)? = null
+    var archiveShoppingListCallback: ((ShoppingListModel, Boolean) -> Unit)? = null
+    var shoppingListDetailsCallback: ((ShoppingListModel) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListsViewHolder {
@@ -36,13 +36,13 @@ class ShoppingListsRecyclerViewAdapter :
             with(binding) {
                 shoppingList = item
                 listCardViewConstraintLayout.setOnClickListener {
-                    listDetailsCallback?.invoke(item)
+                    shoppingListDetailsCallback?.invoke(item)
                 }
                 listCardViewDeleteButton.setOnClickListener {
-                    removeListCallback?.invoke(item)
+                    removeShoppingListCallback?.invoke(item)
                 }
                 listCardViewCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                    archiveListCallback?.invoke(item, isChecked)
+                    archiveShoppingListCallback?.invoke(item, isChecked)
                 }
             }
         }

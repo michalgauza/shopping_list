@@ -5,31 +5,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinglist.db.ShoppingListRepository
 import com.example.shoppinglist.models.ShoppingListModel
-import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.launch
 
-class ArchivedShoppingListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
+class CurrentListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
-    val archivedShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
+    val currentShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
 
     fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
-            repository.updateOrInsert(newShoppingList)
-            fetchArchivedLists()
+            repository.updateOrInsertShoppingList(newShoppingList)
+            fetchCurrentLists()
         }
     }
 
     fun deleteList(shoppingListModel: ShoppingListModel){
         viewModelScope.launch {
-            repository.remove(shoppingListModel)
-            fetchArchivedLists()
+            repository.removeShoppingList(shoppingListModel)
+            fetchCurrentLists()
         }
     }
 
-    fun fetchArchivedLists() {
+    fun fetchCurrentLists() {
         viewModelScope.launch {
-           archivedShoppingListsListLiveData.value = repository.getArchivedLists()
+            currentShoppingListsListLiveData.value = repository.getCurrentShoppingLists()
         }
     }
 }

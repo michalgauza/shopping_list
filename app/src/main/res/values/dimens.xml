@@ -1,3 +1,9 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="zero_dp">0dp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="card_view_elevation">5dp</dimen>
+    <dimen name="quarter_margin">4dp</dimen>
+    <dimen name="card_text_view_text_size">22sp</dimen>
+    <dimen name="quarter_padding">4dp</dimen>
 </resources>

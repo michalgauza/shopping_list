@@ -8,26 +8,26 @@ import com.example.shoppinglist.models.ProductModel
 import com.example.shoppinglist.models.ShoppingListModel
 import kotlinx.coroutines.launch
 
-class ShoppingListDetailsActivityViewModel(private val repository: ShoppingListRepository) : ViewModel() {
+class ShoppingListDetailsActivityViewModel(private val repository: ShoppingListRepository) :
+    ViewModel() {
 
     val shoppingListLiveData = MutableLiveData<ShoppingListModel>()
 
     private fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
-            repository.updateOrInsert(newShoppingList)
+            repository.updateOrInsertShoppingList(newShoppingList)
             fetchShoppingList(newShoppingList.id)
         }
     }
 
     fun fetchShoppingList(id: String) {
         viewModelScope.launch {
-            shoppingListLiveData.value = repository.getListById(id)
+            shoppingListLiveData.value = repository.getShoppingListById(id)
         }
     }
 
     fun addNewProduct(newProduct: ProductModel) {
-        val newShoppingList = shoppingListLiveData.value
-        newShoppingList?.let {
+            shoppingListLiveData.value?.let {
             it.shoppingItemsList.add(0, newProduct)
             updateOrInsertList(it)
         }

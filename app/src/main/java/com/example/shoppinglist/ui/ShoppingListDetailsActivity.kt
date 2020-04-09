@@ -14,8 +14,11 @@ import com.example.shoppinglist.adapters.ProductsRecyclerViewAdapter
 import com.example.shoppinglist.databinding.ActivityDetailsBinding
 import com.example.shoppinglist.models.ProductModel
 import com.example.shoppinglist.models.ShoppingListModel
+import com.example.shoppinglist.utils.closeKeyboard
 import com.example.shoppinglist.utils.setViewVisibility
+import com.example.shoppinglist.utils.showKeyboard
 import com.example.shoppinglist.vm.ShoppingListDetailsActivityViewModel
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 
@@ -23,13 +26,13 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
 
     private val viewModel by inject<ShoppingListDetailsActivityViewModel>()
 
-    private val shoppingListObserver = Observer<ShoppingListModel> { shoppingListModel ->
+    private val shoppingListLiveDataObserver = Observer<ShoppingListModel> { shoppingListModel ->
         shoppingListsRecyclerViewAdapter.submitList(shoppingListModel.shoppingItemsList.sortedBy { it.isBought })
     }
 
     private var shoppingListName: String? = null
     private var shoppingListId: String? = null
-    private var isShoppingListArchived: Boolean? = null
+    private var shoppingListIsArchived: Boolean? = null
 
     lateinit var binding: ActivityDetailsBinding
 
@@ -42,14 +45,14 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
         intent.extras?.run {
             shoppingListName = getString(SHOPPING_LIST_NAME_KEY)
             shoppingListId = getString(SHOPPING_LIST_ID_KEY)
-            isShoppingListArchived = getBoolean(SHOPPING_LIST_IS_ARCHIVED_KEY)
+            shoppingListIsArchived = getBoolean(SHOPPING_LIST_IS_ARCHIVED_KEY)
 
         }
         with(binding) {
             viewModel = this@ShoppingListDetailsActivity.viewModel
             lifecycleOwner = this@ShoppingListDetailsActivity
             detailsActivityToolbar.title = shoppingListName
-            isShoppingListArchived?.let {
+            shoppingListIsArchived?.let {
                 this.detailsActivityFab.apply {
                     setViewVisibility(it.not())
                     setOnClickListener {
@@ -60,18 +63,21 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
         }
         setupRecyclerAdapter()
         with(viewModel) {
-            shoppingListLiveData.observe(this@ShoppingListDetailsActivity, shoppingListObserver)
+            shoppingListLiveData.observe(
+                this@ShoppingListDetailsActivity,
+                shoppingListLiveDataObserver
+            )
             shoppingListId?.let { fetchShoppingList(it) }
         }
     }
 
     private fun setupRecyclerAdapter() {
-        isShoppingListArchived?.let {
+        shoppingListIsArchived?.let {
             shoppingListsRecyclerViewAdapter =
                 ProductsRecyclerViewAdapter(it.not())
         }
 
-        binding.detailsActivityRecyclerView.apply {
+        with(binding.detailsActivityRecyclerView) {
             layoutManager = LinearLayoutManager(this@ShoppingListDetailsActivity)
             adapter = shoppingListsRecyclerViewAdapter
         }
@@ -88,20 +94,34 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupDialog() {
-        val input = EditText(this)
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("New product")
-        builder.setView(input)
-        builder.setCancelable(false)
-        builder.setPositiveButton("OK") { _, _ ->
-            if (input.text.isEmpty().not()) {
-                viewModel.addNewProduct(ProductModel(name = input.text.toString()))
-            } else {
-                input.error = "Please provide name for product."
-            }
+        val input = EditText(this).apply {
+            requestFocus()
         }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
+        showKeyboard(this)
+        AlertDialog.Builder(this).apply {
+            setTitle(getString(R.string.add_product_dialog_title))
+            setView(input)
+            setCancelable(false)
+            setPositiveButton(getString(R.string.add_product_dialog_positive_button)) { _, _ ->
+                addProduct(input)
+            }
+            setNegativeButton(getString(R.string.add_product_dialog_negative_button)) { dialog, _ -> dialog.cancel() }
+            show()
+        }
+    }
+
+    private fun addProduct(input: EditText) {
+        if (input.text.isEmpty().not()) {
+            viewModel.addNewProduct(ProductModel(name = input.text.toString()))
+            closeKeyboard(this@ShoppingListDetailsActivity)
+        } else {
+            Snackbar.make(
+                binding.detailsActivityConstraintLayout,
+                getString(R.string.add_product_error_message),
+                Snackbar.LENGTH_SHORT
+            )
+            closeKeyboard(this@ShoppingListDetailsActivity)
+        }
     }
 
     companion object {

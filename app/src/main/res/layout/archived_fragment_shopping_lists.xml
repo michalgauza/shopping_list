@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.shoppinglist.vm.ArchivedShoppingListsFragmentViewModel" />
+            type="com.example.shoppinglist.vm.ArchivedListsFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,8 +17,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/archived_fragment_shopping_list_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="@dimen/zero_dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
