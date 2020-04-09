@@ -6,7 +6,7 @@ import com.example.shoppinglist.db.ShoppingListDao
 import com.example.shoppinglist.db.ShoppingListDatabase
 import com.example.shoppinglist.db.ShoppingListRepository
 import com.example.shoppinglist.vm.ArchivedShoppingListsFragmentViewModel
-import com.example.shoppinglist.vm.DetailsActivityViewModel
+import com.example.shoppinglist.vm.ShoppingListDetailsActivityViewModel
 import com.example.shoppinglist.vm.CurrentShoppingListsFragmentViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -17,7 +17,7 @@ const val DATABASE_NAME = "shopping_list_database"
 val viewModelModule = module {
     viewModel { CurrentShoppingListsFragmentViewModel(get()) }
     viewModel { ArchivedShoppingListsFragmentViewModel(get()) }
-    viewModel { DetailsActivityViewModel(get()) }
+    viewModel { ShoppingListDetailsActivityViewModel(get()) }
 }
 
 val databaseModule = module {

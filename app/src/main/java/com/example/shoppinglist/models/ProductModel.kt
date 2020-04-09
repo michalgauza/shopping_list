@@ -4,6 +4,6 @@ import java.util.*
 
 data class ProductModel(
     val id: String = Date().time.toString(),
-    var name: String,
+    val name: String,
     var isBought: Boolean = false
 )

@@ -15,13 +15,13 @@ import com.example.shoppinglist.databinding.ActivityDetailsBinding
 import com.example.shoppinglist.models.ProductModel
 import com.example.shoppinglist.models.ShoppingListModel
 import com.example.shoppinglist.utils.setViewVisibility
-import com.example.shoppinglist.vm.DetailsActivityViewModel
+import com.example.shoppinglist.vm.ShoppingListDetailsActivityViewModel
 import org.koin.android.ext.android.inject
 
 
 class ShoppingListDetailsActivity : AppCompatActivity() {
 
-    private val viewModel by inject<DetailsActivityViewModel>()
+    private val viewModel by inject<ShoppingListDetailsActivityViewModel>()
 
     private val shoppingListObserver = Observer<ShoppingListModel> { shoppingListModel ->
         shoppingListsRecyclerViewAdapter.submitList(shoppingListModel.shoppingItemsList.sortedBy { it.isBought })

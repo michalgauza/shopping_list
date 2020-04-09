@@ -8,7 +8,7 @@ import com.example.shoppinglist.models.ProductModel
 import com.example.shoppinglist.models.ShoppingListModel
 import kotlinx.coroutines.launch
 
-class DetailsActivityViewModel(private val repository: ShoppingListRepository) : ViewModel() {
+class ShoppingListDetailsActivityViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
     val shoppingListLiveData = MutableLiveData<ShoppingListModel>()
 

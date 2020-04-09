@@ -12,8 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.adapters.ShoppingListsRecyclerViewAdapter
 import com.example.shoppinglist.databinding.CurrentFragmentShoppingListsBinding
 import com.example.shoppinglist.models.ShoppingListModel
+import com.example.shoppinglist.utils.closeKeyboard
+import com.example.shoppinglist.utils.showKeyboard
 import com.example.shoppinglist.vm.CurrentShoppingListsFragmentViewModel
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
+
 
 class CurrentShoppingListsFragment : Fragment() {
 
@@ -48,12 +52,9 @@ class CurrentShoppingListsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerAdapter()
-
-        viewModel.fetchCurrentLists()
         binding.currentFragmentShoppingListFab.setOnClickListener {
             setupDialog()
         }
-
         viewModel.currentShoppingListsListLiveData.observe(
             viewLifecycleOwner,
             shoppingListsListLiveDataObserver
@@ -61,43 +62,65 @@ class CurrentShoppingListsFragment : Fragment() {
     }
 
     private fun setupRecyclerAdapter() {
-        shoppingListsRecyclerViewAdapter = ShoppingListsRecyclerViewAdapter()
-        binding.currentFragmentShoppingListRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.currentFragmentShoppingListRecyclerView.adapter = shoppingListsRecyclerViewAdapter
-        shoppingListsRecyclerViewAdapter.listDetailsCallback = { listModel ->
-            navigateToListDetails(listModel)
+        shoppingListsRecyclerViewAdapter = ShoppingListsRecyclerViewAdapter().apply {
+            listDetailsCallback = { listModel ->
+                navigateToListDetails(listModel)
+            }
+            removeListCallback = { listModel ->
+                viewModel.deleteList(listModel)
+            }
+            archiveListCallback = { shoppingListModel, archived ->
+                shoppingListModel.isArchived = archived
+                viewModel.updateOrInsertList(shoppingListModel)
+            }
         }
-        shoppingListsRecyclerViewAdapter.removeListCallback = { listModel ->
-            viewModel.deleteList(listModel)
-        }
-        shoppingListsRecyclerViewAdapter.archiveListCallback = { shoppingListModel, archived ->
-            shoppingListModel.isArchived = archived
-            viewModel.updateOrInsertList(shoppingListModel)
+        with(binding.currentFragmentShoppingListRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = shoppingListsRecyclerViewAdapter
         }
     }
 
     private fun setupDialog() {
-        val input = EditText(requireContext())
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("New list")
-        builder.setView(input)
-        builder.setCancelable(false)
-        builder.setPositiveButton("OK") { _, _ ->
-            if (input.text.isEmpty().not()) {
-                val newItem = ShoppingListModel(
-                    name = input.text.toString(),
-                    shoppingItemsList = mutableListOf()
-                )
-                viewModel.updateOrInsertList(newItem)
-            } else {
-                input.error = "Please provide name for list."
-            }
+        val input = EditText(requireContext()).apply {
+            requestFocus()
         }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
+        showKeyboard(requireContext())
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle("New list")
+            setView(input)
+            setCancelable(false)
+            setPositiveButton("OK") { _, _ ->
+                addShoppingList(input)
+            }
+            setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+                closeKeyboard(requireContext())
+            }
+            show()
+        }
     }
 
+    private fun addShoppingList(input: EditText) {
+        if (input.text.isEmpty().not()) {
+            val newItem = ShoppingListModel(
+                name = input.text.toString(),
+                shoppingItemsList = mutableListOf()
+            )
+            viewModel.updateOrInsertList(newItem)
+            closeKeyboard(requireContext())
+        } else {
+            Snackbar.make(
+                binding.currentFragmentShoppingListConstraintLayout,
+                "Can't add list without name.",
+                Snackbar.LENGTH_SHORT
+            ).show()
+            closeKeyboard(requireContext())
+        }
+    }
+
+
     private fun navigateToListDetails(item: ShoppingListModel) {
-        ShoppingListDetailsActivity.getIntent(requireContext(), item.name, item.id, false).run { startActivity(this) }
+        ShoppingListDetailsActivity.getIntent(requireContext(), item.name, item.id, false)
+            .run { startActivity(this) }
     }
 }

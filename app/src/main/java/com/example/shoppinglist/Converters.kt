@@ -5,10 +5,10 @@ import com.example.shoppinglist.models.ProductModel
 import com.google.gson.Gson
 
 class Converters {
+    @TypeConverter
+    fun listToJson(value: MutableList<ProductModel>?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun listToJson(value: MutableList<ProductModel>?) = Gson().toJson(value)
-
-    @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, Array<ProductModel>::class.java).toMutableList()
+    fun jsonToList(value: String): MutableList<ProductModel> =
+        Gson().fromJson(value, Array<ProductModel>::class.java).toMutableList()
 }
