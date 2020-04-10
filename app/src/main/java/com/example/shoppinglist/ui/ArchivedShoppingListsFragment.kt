@@ -78,7 +78,11 @@ class ArchivedShoppingListsFragment : Fragment() {
     }
 
     private fun navigateToListDetails(shoppingList: ShoppingListModel) {
-        ShoppingListDetailsActivity.getIntent(requireContext(), shoppingList.name, shoppingList.id, true)
-            .run { startActivity(this) }
+        ShoppingListDetailsActivity.getIntent(
+            requireContext(),
+            shoppingList.name,
+            shoppingList.id,
+            true
+        ).run { startActivity(this) }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.shoppinglist.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.shoppinglist.models.ShoppingListModel
 

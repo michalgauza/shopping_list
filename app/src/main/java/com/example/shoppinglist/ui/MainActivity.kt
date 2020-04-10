@@ -21,5 +21,4 @@ class MainActivity : AppCompatActivity() {
         main_activity_view_pager.adapter = myViewPagerAdapter
         main_activity_tab_layout.setupWithViewPager(main_activity_view_pager)
     }
-
 }

@@ -140,5 +140,4 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
                 putExtra(SHOPPING_LIST_IS_ARCHIVED_KEY, isArchived)
             }
     }
-
 }

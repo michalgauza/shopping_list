@@ -5,6 +5,6 @@ import androidx.databinding.BindingAdapter
 import com.example.shoppinglist.utils.toSimpleDateFormat
 
 @BindingAdapter("dateToString")
-fun TextView.dateToString(dateInLong: Long){
+fun TextView.dateToString(dateInLong: Long) {
     text = dateInLong.toSimpleDateFormat()
 }
