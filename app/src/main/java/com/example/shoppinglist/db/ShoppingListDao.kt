@@ -12,10 +12,10 @@ interface ShoppingListDao {
     @Query(value = "select * from shopping_lists where id = :id")
     suspend fun getShoppingListById(id: String): ShoppingListModel
 
-    @Query(value = "select * from shopping_lists where isArchived == 0 ORDER BY date")
+    @Query(value = "select * from shopping_lists where isArchived == 0")
     suspend fun getCurrentShoppingLists(): List<ShoppingListModel>
 
-    @Query(value = "select * from shopping_lists where isArchived == 1 ORDER BY date")
+    @Query(value = "select * from shopping_lists where isArchived == 1")
     suspend fun getArchivedShoppingLists(): List<ShoppingListModel>
 
     @Delete

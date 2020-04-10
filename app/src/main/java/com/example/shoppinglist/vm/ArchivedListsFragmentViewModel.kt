@@ -1,5 +1,6 @@
 package com.example.shoppinglist.vm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,8 +11,8 @@ import kotlinx.coroutines.launch
 
 class ArchivedListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
-    val archivedShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
-
+    private val _archivedShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
+    val archivedShoppingListsListLiveData: LiveData<List<ShoppingListModel>> = _archivedShoppingListsListLiveData
     fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
             repository.updateOrInsertShoppingList(newShoppingList)
@@ -28,7 +29,7 @@ class ArchivedListsFragmentViewModel(private val repository: ShoppingListReposit
 
     fun fetchArchivedLists() {
         viewModelScope.launch {
-           archivedShoppingListsListLiveData.value = repository.getArchivedShoppingLists()
+           _archivedShoppingListsListLiveData.value = repository.getArchivedShoppingLists()
         }
     }
 }

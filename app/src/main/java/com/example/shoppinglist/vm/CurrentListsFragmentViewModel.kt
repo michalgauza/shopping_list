@@ -1,5 +1,6 @@
 package com.example.shoppinglist.vm
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,9 @@ import kotlinx.coroutines.launch
 
 class CurrentListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
-    val currentShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
+    private val _currentShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
+    val currentShoppingListsListLiveData: LiveData<List<ShoppingListModel>> =
+        _currentShoppingListsListLiveData
 
     fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
@@ -19,7 +22,7 @@ class CurrentListsFragmentViewModel(private val repository: ShoppingListReposito
         }
     }
 
-    fun deleteList(shoppingListModel: ShoppingListModel){
+    fun deleteList(shoppingListModel: ShoppingListModel) {
         viewModelScope.launch {
             repository.removeShoppingList(shoppingListModel)
             fetchCurrentLists()
@@ -28,7 +31,7 @@ class CurrentListsFragmentViewModel(private val repository: ShoppingListReposito
 
     fun fetchCurrentLists() {
         viewModelScope.launch {
-            currentShoppingListsListLiveData.value = repository.getCurrentShoppingLists()
+            _currentShoppingListsListLiveData.value = repository.getCurrentShoppingLists()
         }
     }
 }

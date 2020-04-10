@@ -32,6 +32,7 @@ class CurrentShoppingListsFragment : Fragment() {
             shoppingListsRecyclerViewAdapter.submitList(shoppingListsList)
         }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +57,7 @@ class CurrentShoppingListsFragment : Fragment() {
         binding.currentFragmentShoppingListFab.setOnClickListener {
             setupDialog()
         }
+
         viewModel.currentShoppingListsListLiveData.observe(
             viewLifecycleOwner,
             shoppingListsListLiveDataObserver

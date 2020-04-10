@@ -12,7 +12,7 @@ val shoppingListDiffUtilCallback = object : DiffUtil.ItemCallback<ShoppingListMo
     override fun areContentsTheSame(
         oldItem: ShoppingListModel,
         newItem: ShoppingListModel
-    ): Boolean = (oldItem.isArchived == newItem.isArchived && oldItem.name == newItem.name)
+    ): Boolean = (oldItem.isArchived == newItem.isArchived && oldItem.name == newItem.name && oldItem.shoppingItemsList == newItem.shoppingItemsList)
 }
 
 val shoppingItemsListDiffUtilCallback = object : DiffUtil.ItemCallback<ProductModel>() {
