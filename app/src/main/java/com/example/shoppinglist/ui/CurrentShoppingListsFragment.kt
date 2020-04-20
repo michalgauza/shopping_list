@@ -32,7 +32,6 @@ class CurrentShoppingListsFragment : Fragment() {
             shoppingListsRecyclerViewAdapter.submitList(shoppingListsList)
         }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,11 +42,6 @@ class CurrentShoppingListsFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchCurrentLists()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

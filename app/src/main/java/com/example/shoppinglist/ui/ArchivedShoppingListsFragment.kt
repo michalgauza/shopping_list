@@ -26,13 +26,6 @@ class ArchivedShoppingListsFragment : Fragment() {
 
     private lateinit var shoppingListsRecyclerViewAdapter: ShoppingListsRecyclerViewAdapter
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.fetchArchivedLists()
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

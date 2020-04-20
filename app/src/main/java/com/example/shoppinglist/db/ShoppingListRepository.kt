@@ -4,9 +4,9 @@ import com.example.shoppinglist.models.ShoppingListModel
 
 class ShoppingListRepository(private val shoppingListDao: ShoppingListDao) {
 
-    suspend fun getCurrentShoppingLists() = shoppingListDao.getCurrentShoppingLists().sortedByDescending { it.date }
+    fun getCurrentShoppingLists() = shoppingListDao.getCurrentShoppingLists()
 
-    suspend fun getArchivedShoppingLists() = shoppingListDao.getArchivedShoppingLists().sortedByDescending { it.date }
+    fun getArchivedShoppingLists() = shoppingListDao.getArchivedShoppingLists()
 
     suspend fun updateOrInsertShoppingList(newShoppingList: ShoppingListModel) {
         shoppingListDao.insertOrUpdateShoppingList(newShoppingList)

@@ -36,7 +36,7 @@ class ShoppingListDetailsActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityDetailsBinding
 
-    lateinit var shoppingListsRecyclerViewAdapter: ProductsRecyclerViewAdapter
+    private lateinit var shoppingListsRecyclerViewAdapter: ProductsRecyclerViewAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

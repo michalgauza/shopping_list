@@ -11,25 +11,17 @@ import kotlinx.coroutines.launch
 
 class ArchivedListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
-    private val _archivedShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
-    val archivedShoppingListsListLiveData: LiveData<List<ShoppingListModel>> = _archivedShoppingListsListLiveData
+    val archivedShoppingListsListLiveData: LiveData<List<ShoppingListModel>> = repository.getArchivedShoppingLists()
     fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
             repository.updateOrInsertShoppingList(newShoppingList)
-            fetchArchivedLists()
         }
     }
 
     fun deleteList(shoppingListModel: ShoppingListModel){
         viewModelScope.launch {
             repository.removeShoppingList(shoppingListModel)
-            fetchArchivedLists()
         }
     }
 
-    fun fetchArchivedLists() {
-        viewModelScope.launch {
-           _archivedShoppingListsListLiveData.value = repository.getArchivedShoppingLists()
-        }
-    }
 }

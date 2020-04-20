@@ -11,27 +11,18 @@ import kotlinx.coroutines.launch
 
 class CurrentListsFragmentViewModel(private val repository: ShoppingListRepository) : ViewModel() {
 
-    private val _currentShoppingListsListLiveData = MutableLiveData<List<ShoppingListModel>>()
     val currentShoppingListsListLiveData: LiveData<List<ShoppingListModel>> =
-        _currentShoppingListsListLiveData
+        repository.getCurrentShoppingLists()
 
     fun updateOrInsertList(newShoppingList: ShoppingListModel) {
         viewModelScope.launch {
             repository.updateOrInsertShoppingList(newShoppingList)
-            fetchCurrentLists()
         }
     }
 
     fun deleteList(shoppingListModel: ShoppingListModel) {
         viewModelScope.launch {
             repository.removeShoppingList(shoppingListModel)
-            fetchCurrentLists()
-        }
-    }
-
-    fun fetchCurrentLists() {
-        viewModelScope.launch {
-            _currentShoppingListsListLiveData.value = repository.getCurrentShoppingLists()
         }
     }
 }
